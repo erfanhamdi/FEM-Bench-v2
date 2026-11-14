@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "prompt_set_id": "simpleagent_v1_avoid_guard_rail",
+  "harness": "simpleagent",
+  "track": "implementation",
+  "files": [
+    {
+      "path": "prompt_sets/simpleagent_v1_avoid_guard_rail/prompts.json"
+    },
+    {
+      "path": "prompt_templates/code_prompt.j2"
+    }
+  ]
+}

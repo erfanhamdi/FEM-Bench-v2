@@ -1,0 +1,12 @@
+experiment:
+  name: llm_as_judge
+  id: llm-as-judge
+codebook_version: new-v5
+codebook: llm-as-judge/Codebook.csv
+system_prompt: llm-as-judge/judge_system_prompt.tx
+models: [gemini_3_8_flash_google]
+generation:
+  max_output_tokens: provider_max
+# Prepared package directories; empty means all packages from both harnesses.
+trial_dirs: []
+input_dir: llm-as-judge

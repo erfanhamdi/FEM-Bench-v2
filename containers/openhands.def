@@ -1,0 +1,45 @@
+Bootstrap: docker
+From: python:3.12-slim-bookworm
+
+%labels
+    org.opencontainers.image.title FEM-Bench OpenHands
+    org.opencontainers.image.version 1.16.0
+    fem-bench.openhands-sdk.version 1.21.0
+    fem-bench.boto3.version 1.42.86
+    fem-bench.numpy.version 2.3.5
+    fem-bench.scipy.version 1.16.3
+    fem-bench.pytest.version 8.3.3
+
+%files
+    src/fem_bench/agents/openhands_cli.py /usr/local/lib/python3.12/site-packages/fem_bench/agents/openhands_cli.py
+    containers/openhands-agent-controls.constraints.txt /tmp/openhands.constraints.txt
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update
+    apt-get install -y --no-install-recommends \
+        chromium \
+        ca-certificates \
+        curl \
+        fonts-liberation
+    rm -rf /var/lib/apt/lists/*
+    python -m pip install --no-cache-dir \
+        --constraint /tmp/openhands.constraints.txt \
+        openhands==1.16.0 \
+        openhands-sdk==1.21.0 \
+        openhands-agent-server==1.44.0 \
+        boto3==1.42.86 \
+        numpy==2.3.5 \
+        scipy==1.16.3 \
+        pytest==8.3.3
+    rm /tmp/openhands.constraints.txt
+    mkdir -p /workspace /state
+    chmod 0777 /workspace /state
+
+%environment
+    export PYTHONUNBUFFERED=1
+    export OPENHANDS_SUPPRESS_BANNER=1
+
+%test
+    python -c 'import boto3, numpy, pytest, scipy, fem_bench.agents.openhands_cli'
+    chromium --version

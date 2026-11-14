@@ -1,0 +1,28 @@
+schema_version: "1.0"
+experiment:
+  name: multiagent
+track: implementation
+harness: multiagent
+benchmark:
+  split: legacy
+  task_ids: [FEM_1D_linear_elastic_CC0_H0_T0]
+models: [claude_haiku_4_5_aws]
+trials:
+  count: 1
+prompt_set: multiagent_v2
+generation:
+  max_output_tokens: 20000
+prompt_caching:
+  enabled: true
+harness_config:
+  tester_model: claude_haiku_4_5_aws
+  max_coder_runs_per_round: 3
+  agent_token_budget: 2000000
+  total_token_budget: 4000000
+  max_wall_time_seconds: 14400
+  network_access: false
+  max_iterations: 200
+  max_rounds: 30
+  execution_timeout_seconds: 60
+  suite_timeout_seconds: 300
+  max_output_chars: 10000

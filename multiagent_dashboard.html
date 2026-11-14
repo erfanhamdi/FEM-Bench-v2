@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MultiAgent trajectories</title>
+<!--EMBEDDED-->
+<style>
+.viz-root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface-1: #fcfcfb;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border: rgba(11,11,11,0.10);
+  --wash: rgba(11,11,11,0.04);
+  --series-1: #2a78d6;  /* scratch execution */
+  --series-2: #eb6834;  /* hand-off: candidate / feedback */
+  --series-3: #1baf7a;  /* suite change: tests / retire */
+  --coder-wash: rgba(42,120,214,0.07);
+  --tester-wash: rgba(235,104,52,0.07);
+  --good: #0ca30c;
+  --critical: #d03b3b;
+  --warning: #fab219;
+  --code-bg: #f0efec;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .viz-root {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface-1: #1a1a19; --text-primary: #f0efec;
+    --text-secondary: #c3c2b7; --grid: #2c2c2a; --baseline: #383835;
+    --border: rgba(255,255,255,0.10); --wash: rgba(255,255,255,0.05);
+    --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70;
+    --coder-wash: rgba(57,135,229,0.10); --tester-wash: rgba(217,89,38,0.10);
+    --code-bg: #232322;
+  }
+}
+:root[data-theme="dark"] .viz-root {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface-1: #1a1a19; --text-primary: #f0efec;
+  --text-secondary: #c3c2b7; --grid: #2c2c2a; --baseline: #383835;
+  --border: rgba(255,255,255,0.10); --wash: rgba(255,255,255,0.05);
+  --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70;
+  --coder-wash: rgba(57,135,229,0.10); --tester-wash: rgba(217,89,38,0.10);
+  --code-bg: #232322;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body.viz-root {
+  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--page); color: var(--text-primary);
+  display: grid; grid-template-columns: 340px 1fr; grid-template-rows: auto 1fr;
+}
+header {
+  grid-column: 1 / -1; display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--surface-1);
+}
+header h1 { font-size: 16px; margin: 0; font-weight: 600; }
+header .spacer { flex: 1; }
+button, input, select {
+  font: inherit; color: inherit; background: var(--surface-1);
+  border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px;
+}
+button { cursor: pointer; }
+button:hover { background: var(--wash); }
+label.toggle { display: flex; gap: 6px; align-items: center; color: var(--text-secondary); }
+aside { border-right: 1px solid var(--border); overflow: auto; background: var(--surface-1); }
+aside .filter { padding: 10px; position: sticky; top: 0; background: var(--surface-1); border-bottom: 1px solid var(--border); }
+aside .filter input { width: 100%; }
+.trial { padding: 10px 12px; border-bottom: 1px solid var(--border); cursor: pointer; }
+.trial:hover { background: var(--wash); }
+.trial.selected { background: var(--wash); box-shadow: inset 3px 0 0 var(--text-primary); }
+.trial .task { font-weight: 600; word-break: break-all; }
+.trial .meta { color: var(--text-secondary); font-size: 12px; }
+.badge { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-secondary); }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+main { overflow: auto; padding: 16px 20px 40px; }
+.empty { color: var(--muted); padding: 40px; text-align: center; }
+h2 { font-size: 18px; margin: 0 0 2px; word-break: break-all; }
+.sub { color: var(--text-secondary); margin-bottom: 14px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+.tile .label { color: var(--text-secondary); font-size: 12px; }
+.tile .value { font-size: 22px; font-weight: 600; }
+.tile .note { color: var(--muted); font-size: 12px; }
+.card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin-bottom: 16px; }
+.card h3 { font-size: 14px; margin: 0 0 8px; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; color: var(--text-secondary); font-size: 12px; margin-bottom: 6px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+svg text { fill: var(--text-secondary); font-size: 11px; }
+svg .glyph { fill: #fff; font-size: 10px; font-weight: 700; pointer-events: none; }
+.tooltip {
+  position: fixed; pointer-events: none; background: var(--surface-1); color: var(--text-primary);
+  border: 1px solid var(--border); border-radius: 6px; padding: 6px 9px; font-size: 12px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12); display: none; max-width: 360px; z-index: 10;
+}
+.tabs { display: flex; gap: 4px; margin-bottom: 12px; border-bottom: 1px solid var(--border); }
+.tabs button { border: none; border-radius: 6px 6px 0 0; padding: 6px 12px; color: var(--text-secondary); background: none; }
+.tabs button.active { color: var(--text-primary); box-shadow: inset 0 -2px 0 var(--text-primary); }
+.convo { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; }
+.convo .colhead { font-weight: 600; color: var(--text-secondary); position: sticky; top: -16px; background: var(--page); padding: 6px 0; z-index: 1; }
+.msg { border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; background: var(--surface-1); min-width: 0; }
+.msg.coder { grid-column: 1; background: var(--coder-wash); }
+.msg.tester { grid-column: 2; background: var(--tester-wash); }
+.msg.harness { border-style: dashed; }
+.msg.to-coder { grid-column: 1; }
+.msg.to-tester { grid-column: 2; }
+.msg.handoff { border: 1.5px solid var(--text-secondary); }
+.msg.flash { outline: 2px solid var(--text-primary); }
+.msg .head { display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+.msg .head .who { font-weight: 600; color: var(--text-primary); }
+.msg .head .t { margin-left: auto; font-variant-numeric: tabular-nums; }
+.msg .body { overflow: hidden; }
+.msg .body.clamped { max-height: 280px; -webkit-mask-image: linear-gradient(#000 80%, transparent); mask-image: linear-gradient(#000 80%, transparent); }
+.msg .more { font-size: 12px; margin-top: 4px; padding: 2px 8px; }
+.prose { white-space: pre-wrap; word-break: break-word; }
+.codeblock { margin: 6px 0; }
+.codeblock .lab { font-size: 11px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+pre { margin: 2px 0 0; background: var(--code-bg); border-radius: 6px; padding: 8px 10px; overflow: auto; font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; }
+.discarded { margin-top: 6px; font-size: 12px; color: var(--muted); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+th { color: var(--text-secondary); font-weight: 600; }
+td.num { font-variant-numeric: tabular-nums; }
+.status { display: inline-flex; gap: 4px; align-items: center; white-space: nowrap; }
+.status .icon { font-weight: 700; }
+.status.good .icon { color: var(--good); }
+.status.bad .icon { color: var(--critical); }
+.status.run .icon { color: var(--warning); }
+details { margin-bottom: 8px; }
+summary { cursor: pointer; }
+</style>
+</head>
+<body class="viz-root">
+<header>
+  <h1>MultiAgent trajectories</h1>
+  <span class="badge" id="source"></span>
+  <span class="spacer"></span>
+  <label class="toggle"><input type="checkbox" id="auto" checked> Auto-refresh</label>
+  <button id="refresh">Refresh</button>
+  <button id="theme" title="Toggle light/dark">Theme</button>
+</header>
+<aside>
+  <div class="filter"><input id="filter" placeholder="Filter by task, model, run, status…"></div>
+  <div id="list"></div>
+</aside>
+<main id="main"><div class="empty">Select a trial.</div></main>
+<div class="tooltip" id="tip"></div>
+
+<script>
+const EMBEDDED = window.__TRIALS__ || null;
+const ACTIONS = {
+  python:       {group: "scratch", glyph: "P", label: "Scratch run"},
+  candidate:    {group: "handoff", glyph: "C", label: "Candidate"},
+  feedback:     {group: "handoff", glyph: "F", label: "Feedback"},
+  tests:        {group: "suite",   glyph: "T", label: "Write tests"},
+  retire:       {group: "suite",   glyph: "R", label: "Retire tests"},
+  submit:       {group: "submit",  glyph: "✓", label: "Submit"},
+  format_error: {group: "error",   glyph: "!", label: "Format error"},
+  truncated:    {group: "error",   glyph: "!", label: "Truncated"},
+};
+const GROUP_COLOR = {
+  scratch: "var(--series-1)", handoff: "var(--series-2)", suite: "var(--series-3)",
+  submit: "var(--good)", error: "var(--muted)",
+};
+const GROUP_LABEL = {
+  scratch: "Scratch run (P)", handoff: "Hand-off: candidate (C) / feedback (F)",
+  suite: "Suite change: tests (T) / retire (R)", submit: "Submit (✓)", error: "Format error / truncated (!)",
+};
+let trials = [];
+let selected = null;
+let detail = null;
+let tab = "conversation";
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const fmtTokens = (n) => n >= 1e6 ? (n / 1e6).toFixed(2) + "M" : n >= 1e3 ? Math.round(n / 1e3) + "k" : String(n);
+const fmtTime = (s) => s >= 3600 ? (s / 3600).toFixed(1) + " h" : s >= 60 ? (s / 60).toFixed(1) + " min" : Math.round(s) + " s";
+
+function statusInfo(t) {
+  if (t.status === "running") return {cls: "run", icon: "●", label: "Running"};
+  if (t.status === "submitted") {
+    if (t.correct === 1) return {cls: "good", icon: "✓", label: "Submitted · correct"};
+    if (t.correct === 0) return {cls: "bad", icon: "✗", label: "Submitted · incorrect"};
+    return {cls: "run", icon: "●", label: "Submitted · grading"};
+  }
+  return {cls: "bad", icon: "✗", label: t.status.replaceAll("_", " ")};
+}
+const statusHtml = (t) => { const s = statusInfo(t); return `<span class="status ${s.cls}"><span class="icon">${s.icon}</span>${esc(s.label)}</span>`; };
+
+async function loadList() {
+  trials = EMBEDDED ? EMBEDDED : await (await fetch("api/trials")).json();
+  $("source").textContent = EMBEDDED ? "Static snapshot" : `${trials.length} trials · live`;
+  renderList();
+}
+
+function renderList() {
+  const q = $("filter").value.toLowerCase();
+  const rows = trials
+    .filter((t) => !q || [t.task_id, t.coder_model, t.tester_model, t.run_id, t.status].join(" ").toLowerCase().includes(q))
+    .sort((a, b) => b.updated - a.updated);
+  $("list").innerHTML = rows.map((t) => `
+    <div class="trial ${t.id === selected ? "selected" : ""}" data-id="${esc(t.id)}">
+      <div class="task">${esc(t.task_id)}</div>
+      <div class="meta">${esc(t.coder_model)} → ${esc(t.tester_model)}</div>
+      <div class="meta">${esc(t.run_id)} · ${esc(t.trial)}</div>
+      <div class="meta">${statusHtml(t)} · ${t.n_candidates} cand · ${t.n_test_files} test files</div>
+    </div>`).join("") || `<div class="empty">No MultiAgent trials found.</div>`;
+  document.querySelectorAll(".trial").forEach((el) => el.onclick = () => select(el.dataset.id));
+}
+
+async function select(id) {
+  selected = id;
+  renderList();
+  detail = EMBEDDED ? EMBEDDED.find((t) => t.id === id)
+                    : await (await fetch("api/trial?id=" + encodeURIComponent(id))).json();
+  renderDetail();
+}
+
+function renderDetail() {
+  const d = detail;
+  const scroll = $("main").scrollTop;
+  $("main").innerHTML = `
+    <h2>${esc(d.task_id)}</h2>
+    <div class="sub">${esc(d.run_id)} · ${esc(d.trial)} · coder <b>${esc(d.coder_model)}</b> · tester <b>${esc(d.tester_model)}</b></div>
+    <div class="tiles">
+      <div class="tile" style="grid-column:span 2"><div class="label">Outcome</div><div class="value" style="font-size:16px;padding-top:4px">${statusHtml(d)}</div></div>
+      <div class="tile"><div class="label">Candidates</div><div class="value">${d.n_candidates}</div><div class="note">of ${d.harness_config.max_rounds} max rounds</div></div>
+      <div class="tile"><div class="label">Test files</div><div class="value">${d.n_test_files}</div><div class="note">${d.test_history.length} writes/retires</div></div>
+      <div class="tile"><div class="label">Coder tokens</div><div class="value">${fmtTokens(d.tokens.coder)}</div><div class="note">${d.calls.coder} calls</div></div>
+      <div class="tile"><div class="label">Tester tokens</div><div class="value">${fmtTokens(d.tokens.tester)}</div><div class="note">${d.calls.tester} calls</div></div>
+      <div class="tile"><div class="label">Wall time</div><div class="value">${fmtTime(d.wall_time_seconds)}</div></div>
+    </div>
+    <div class="card"><h3>Timeline</h3><div class="legend">${Object.keys(GROUP_LABEL).map((g) =>
+      `<span><span class="dot" style="background:${GROUP_COLOR[g]}"></span>${GROUP_LABEL[g]}</span>`).join("")}
+      <span><svg width="22" height="8"><line x1="0" y1="4" x2="22" y2="4" stroke="var(--muted)" stroke-dasharray="3 3"/></svg>Message to the other agent</span></div>
+      <div id="chart"></div></div>
+    <div class="tabs">${["conversation", "tests", "suite", "candidates"].map((k) =>
+      `<button data-tab="${k}" class="${tab === k ? "active" : ""}">${{conversation: "Conversation", tests: "Test suite", suite: "Suite runs", candidates: "Candidates & submission"}[k]}</button>`).join("")}</div>
+    <div id="tabbody"></div>`;
+  document.querySelectorAll(".tabs button").forEach((b) => b.onclick = () => { tab = b.dataset.tab; renderDetail(); });
+  renderChart();
+  ({conversation: renderConversation, tests: renderTests, suite: renderSuite, candidates: renderCandidates})[tab]();
+  $("main").scrollTop = scroll;
+}
+
+function renderChart() {
+  const box = $("chart");
+  const width = box.clientWidth, laneH = 44, top = 8, left = 64, right = 16;
+  const actions = detail.events.map((e, i) => ({...e, i})).filter((e) => e.from !== "harness");
+  const tMax = Math.max(1, ...actions.map((e) => e.t)) * 1.03;
+  const x = (t) => left + (t / tMax) * (width - left - right);
+  const laneY = {coder: top + laneH / 2, tester: top + laneH * 1.5};
+  const height = top + laneH * 2 + 26;
+  const [unit, suffix] = tMax > 7200 ? [3600, "h"] : tMax > 300 ? [60, "min"] : [1, "s"];
+  const ticks = [];
+  const step = niceStep(tMax / unit / 6) * unit;
+  for (let t = 0; t <= tMax; t += step) ticks.push(t);
+  let svg = `<svg width="${width}" height="${height}" role="img" aria-label="Agent action timeline">`;
+  for (const lane of ["coder", "tester"]) {
+    svg += `<line x1="${left}" x2="${width - right}" y1="${laneY[lane]}" y2="${laneY[lane]}" stroke="var(--grid)"/>`;
+    svg += `<text x="0" y="${laneY[lane] + 4}" style="font-weight:600;fill:var(--text-primary)">${lane === "coder" ? "Coder" : "Tester"}</text>`;
+  }
+  const axisY = top + laneH * 2 + 4;
+  svg += `<line x1="${left}" x2="${width - right}" y1="${axisY}" y2="${axisY}" stroke="var(--baseline)"/>`;
+  for (const t of ticks) svg += `<text x="${x(t)}" y="${axisY + 16}" text-anchor="middle">${+(t / unit).toFixed(1)} ${suffix}</text>`;
+  detail.events.forEach((e) => {
+    if (e.from === "harness" && (e.kind === "candidate_response" || e.kind === "feedback_response")) {
+      const from = e.to === "tester" ? "coder" : "tester";
+      svg += `<line x1="${x(e.t)}" x2="${x(e.t)}" y1="${laneY[from]}" y2="${laneY[e.to]}" stroke="var(--muted)" stroke-dasharray="3 3"/>`;
+    }
+  });
+  for (const e of actions) {
+    const a = ACTIONS[e.kind] || ACTIONS.format_error;
+    const cx = x(e.t), cy = laneY[e.from];
+    svg += `<g class="mark" data-i="${e.i}" style="cursor:pointer">
+      <circle cx="${cx}" cy="${cy}" r="14" fill="transparent"/>
+      <circle cx="${cx}" cy="${cy}" r="9" fill="${GROUP_COLOR[a.group]}" stroke="var(--surface-1)" stroke-width="2"/>
+      <text class="glyph" x="${cx}" y="${cy + 3.5}" text-anchor="middle">${a.glyph}</text></g>`;
+  }
+  box.innerHTML = svg + "</svg>";
+  const tip = $("tip");
+  box.querySelectorAll(".mark").forEach((m) => {
+    const e = detail.events[+m.dataset.i];
+    const a = ACTIONS[e.kind] || ACTIONS.format_error;
+    m.onmousemove = (ev) => {
+      const prose = e.text.split("```")[0].trim().slice(0, 220);
+      tip.innerHTML = `<b>${e.from === "coder" ? "Coder" : "Tester"} · ${a.label}</b> · ${fmtTime(e.t)}<br><span style="color:var(--text-secondary)">${esc(prose)}${prose.length >= 220 ? "…" : ""}</span>`;
+      tip.style.display = "block";
+      tip.style.left = Math.min(ev.clientX + 14, innerWidth - 380) + "px";
+      tip.style.top = ev.clientY + 14 + "px";
+    };
+    m.onmouseleave = () => tip.style.display = "none";
+    m.onclick = () => jumpTo(+m.dataset.i);
+  });
+}
+
+function niceStep(raw) {
+  const p = Math.pow(10, Math.floor(Math.log10(raw)));
+  for (const m of [1, 2, 5, 10]) if (m * p >= raw) return m * p;
+  return 10 * p;
+}
+
+function jumpTo(i) {
+  if (tab !== "conversation") { tab = "conversation"; renderDetail(); }
+  const el = document.getElementById("ev-" + i);
+  el.scrollIntoView({behavior: "smooth", block: "center"});
+  el.classList.add("flash");
+  setTimeout(() => el.classList.remove("flash"), 1400);
+}
+
+function renderMessage(text) {
+  let html = "", last = 0;
+  const re = /```(\w*)\n([\s\S]*?)```/g;
+  let m;
+  while ((m = re.exec(text))) {
+    const prose = text.slice(last, m.index).trim();
+    if (prose) html += `<div class="prose">${esc(prose)}</div>`;
+    html += `<div class="codeblock"><div class="lab">${esc(m[1] || "python")}</div><pre>${esc(m[2])}</pre></div>`;
+    last = re.lastIndex;
+  }
+  const rest = text.slice(last).trim();
+  if (rest) html += `<div class="prose">${esc(rest)}</div>`;
+  return html;
+}
+
+const HARNESS_TITLE = {
+  task: "Task prompt", candidate_response: "New candidate → tester", feedback_response: "Tester feedback → coder",
+  python_response: "Execution result", tests_response: "Suite result", retire_response: "Suite result",
+  submit_response: "Submission rejected", format_error_response: "Format error", truncated_response: "Truncated reply",
+};
+
+function renderConversation() {
+  let html = `<div class="convo"><div class="colhead">Coder · ${esc(detail.coder_model)}</div><div class="colhead">Tester · ${esc(detail.tester_model)}</div>`;
+  detail.events.forEach((e, i) => {
+    let cls, who, label;
+    if (e.from === "harness") {
+      const handoff = e.kind === "candidate_response" || e.kind === "feedback_response";
+      cls = `harness to-${e.to}${handoff ? " handoff" : ""}`;
+      who = "Harness → " + (e.to === "coder" ? "coder" : "tester");
+      label = HARNESS_TITLE[e.kind] || e.kind;
+    } else {
+      const a = ACTIONS[e.kind] || ACTIONS.format_error;
+      cls = e.from;
+      who = e.from === "coder" ? "Coder" : "Tester";
+      label = `<span class="dot" style="background:${GROUP_COLOR[a.group]}"></span>${a.label}`;
+    }
+    html += `<div class="msg ${cls}" id="ev-${i}">
+      <div class="head"><span class="who">${who}</span><span class="badge">${label}</span>${e.t !== undefined ? `<span class="t">${fmtTime(e.t)}</span>` : ""}</div>
+      <div class="body clamped">${renderMessage(e.text)}</div>
+      ${e.discarded ? `<details class="discarded"><summary>Text after the first block was discarded (${e.discarded.length} chars)</summary><pre>${esc(e.discarded)}</pre></details>` : ""}
+      <button class="more">Expand</button></div>`;
+  });
+  $("tabbody").innerHTML = html + "</div>";
+  document.querySelectorAll(".msg").forEach((m) => {
+    const body = m.querySelector(".body"), btn = m.querySelector(".more");
+    if (body.scrollHeight <= 290) { body.classList.remove("clamped"); btn.remove(); return; }
+    btn.onclick = () => { const c = body.classList.toggle("clamped"); btn.textContent = c ? "Expand" : "Collapse"; };
+  });
+}
+
+function renderTests() {
+  const files = Object.entries(detail.test_files);
+  let html = `<div class="card"><h3>Current suite (${files.length} files)</h3>` +
+    (files.map(([name, code]) => `<details><summary>${esc(name)}</summary><pre>${esc(code)}</pre></details>`).join("") || `<div class="empty">No test files.</div>`) + `</div>`;
+  html += `<div class="card"><h3>History</h3><table><tr><th>#</th><th>On candidate</th><th>Action</th><th>File</th><th>Code</th></tr>` +
+    detail.test_history.map((h, i) => `<tr><td class="num">${i + 1}</td><td class="num">${h.candidate}</td><td>${esc(h.action)}</td><td>${esc(h.file)}</td>
+      <td><details><summary>show</summary><pre>${esc(h.code)}</pre></details></td></tr>`).join("") + `</table></div>`;
+  $("tabbody").innerHTML = html;
+}
+
+function renderSuite() {
+  $("tabbody").innerHTML = `<div class="card"><h3>Suite runs (${detail.suite_runs.length})</h3><table>
+    <tr><th>#</th><th>Candidate</th><th>Result</th><th>Files</th><th>Failing tests</th></tr>` +
+    detail.suite_runs.map((s, i) => {
+      const failing = [...s.failed, ...s.collect_errors];
+      const res = s.returncode === 0 ? `<span class="status good"><span class="icon">✓</span>pass</span>`
+        : s.returncode === 5 ? `<span class="status run"><span class="icon">●</span>no tests</span>`
+        : `<span class="status bad"><span class="icon">✗</span>fail (rc ${s.returncode})</span>`;
+      return `<tr><td class="num">${i + 1}</td><td class="num">${s.candidate}</td><td>${res}</td><td class="num">${s.test_files.length}</td>
+        <td>${failing.map(esc).join("<br>") || "—"}</td></tr>`;
+    }).join("") + `</table></div>`;
+}
+
+function renderCandidates() {
+  let html = detail.candidates.map((c, i) => `<div class="card"><details ${i === detail.candidates.length - 1 ? "open" : ""}>
+    <summary><b>Candidate ${i + 1}</b>${detail.submission && i === detail.candidates.length - 1 && detail.status === "submitted" ? " · submitted" : ""}</summary><pre>${esc(c)}</pre></details></div>`).join("");
+  if (detail.evaluation) html += `<div class="card"><h3>Evaluation</h3><pre>${esc(JSON.stringify(detail.evaluation, null, 2))}</pre></div>`;
+  $("tabbody").innerHTML = html || `<div class="empty">No candidates yet.</div>`;
+}
+
+$("filter").oninput = renderList;
+$("refresh").onclick = refresh;
+$("theme").onclick = () => {
+  const dark = document.documentElement.dataset.theme
+    ? document.documentElement.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  document.documentElement.dataset.theme = dark ? "light" : "dark";
+  if (detail) renderDetail();
+};
+addEventListener("resize", () => detail && renderChart());
+
+async function refresh() {
+  await loadList();
+  const current = trials.find((t) => t.id === selected);
+  if (current && (!detail || current.updated !== detail.updated)) await select(selected);
+}
+if (EMBEDDED) { $("auto").parentElement.style.display = "none"; $("refresh").style.display = "none"; }
+setInterval(() => { if (!EMBEDDED && $("auto").checked) refresh(); }, 15000);
+loadList().then(() => { if (trials.length) select([...trials].sort((a, b) => b.updated - a.updated)[0].id); });
+</script>
+</body>
+</html>

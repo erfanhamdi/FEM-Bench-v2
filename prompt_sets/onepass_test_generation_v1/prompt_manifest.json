@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "prompt_set_id": "onepass_test_generation_v1",
+  "harness": "onepass",
+  "track": "test_generation",
+  "files": [
+    {
+      "path": "prompt_templates/test_prompt.j2"
+    }
+  ],
+  "system_prompt": null
+}

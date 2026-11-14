@@ -1,0 +1,28 @@
+schema_version: "1.0"
+experiment:
+  name: openhands
+track: implementation
+harness: openhands
+benchmark:
+  split: legacy
+  task_ids: [FEM_1D_linear_elastic_CC0_H0_T0]
+models: [claude_haiku_4_5_aws]
+trials:
+  count: 1
+prompt_set: openhands_v2
+generation:
+  max_output_tokens: 20000
+prompt_caching:
+  enabled: true
+harness_config:
+  agent: openhands
+  agent_config:
+    runtime: singularity
+    image: containers/openhands-tool-parameters-20260919.sif
+    network_access: true
+    enable_browser: true
+    cost_limit: 3.0
+    total_token_budget: 250000
+    step_limit: 100
+    timeout_seconds: 1800
+    request_timeout_seconds: 300

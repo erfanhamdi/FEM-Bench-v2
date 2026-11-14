@@ -1,0 +1,1170 @@
+{
+  "$comment": "request.generation.max_output_tokens records provider ceilings or configured caps where no ceiling is published. Experiment YAMLs set the actual per-call cap.",
+  "schema_version": "1.0",
+  "provider_defaults": {
+    "aws": {
+      "region": "us-east-2",
+      "stream_responses": false
+    },
+    "together": {
+      "connect_timeout_seconds": 10,
+      "read_timeout_seconds": 900,
+      "sdk_max_retries": 0,
+      "stream_responses": false
+    }
+  },
+  "models": {
+    "claude_haiku_4_5_aws": {
+      "display_name": "Claude haiku 4.5",
+      "provider": "aws",
+      "adapter": "aws_bedrock_converse",
+      "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "thinking": {
+              "type": "enabled",
+              "budget_tokens": 8000
+            }
+          }
+        },
+        "generation": {
+          "max_output_tokens": 64000,
+          "temperature": null
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "cost_efficient",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": null,
+        "input_per_million": 1,
+        "cached_input_per_million": 0.1,
+        "cache_read_input_per_million": 0.1,
+        "cache_write_input_per_million": 1.25,
+        "output_per_million": 5
+      }
+    },
+    "claude_opus_4_5_aws": {
+      "display_name": "Claude Opus 4.5",
+      "provider": "aws",
+      "adapter": "aws_bedrock_converse",
+      "model_id": "us.anthropic.claude-opus-4-5-20251101-v1:0",
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "thinking": {
+              "type": "enabled",
+              "budget_tokens": 8000
+            }
+          }
+        },
+        "generation": {
+          "max_output_tokens": 64000,
+          "temperature": null
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "frontier",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": null,
+        "input_per_million": 5,
+        "cached_input_per_million": 0.5,
+        "cache_read_input_per_million": 0.5,
+        "cache_write_input_per_million": 6.25,
+        "output_per_million": 25
+      }
+    },
+    "claude_opus_4_7_aws": {
+      "display_name": "Claude Opus 4.7",
+      "provider": "aws",
+      "adapter": "aws_bedrock_converse",
+      "model_id": "us.anthropic.claude-opus-4-7",
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "thinking": {
+              "type": "adaptive"
+            },
+            "output_config": {
+              "effort": "high"
+            }
+          }
+        },
+        "generation": {
+          "max_output_tokens": 128000
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "frontier",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": null,
+        "input_per_million": 5,
+        "cached_input_per_million": 0.5,
+        "cache_read_input_per_million": 0.5,
+        "cache_write_input_per_million": 6.25,
+        "output_per_million": 25
+      }
+    },
+    "claude_opus_5_aws": {
+      "display_name": "Claude Opus 5",
+      "provider": "aws",
+      "adapter": "aws_bedrock_converse",
+      "model_id": "us.anthropic.claude-opus-5",
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "thinking": {
+              "type": "adaptive"
+            },
+            "output_config": {
+              "effort": "high"
+            }
+          }
+        },
+        "generation": {
+          "max_output_tokens": 128000
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "frontier",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-07-23",
+        "input_per_million": 5,
+        "cached_input_per_million": 0.5,
+        "cache_read_input_per_million": 0.5,
+        "cache_write_input_per_million": 6.25,
+        "output_per_million": 25
+      }
+    },
+    "claude_sonnet_5_aws": {
+      "display_name": "Claude Sonnet 5",
+      "provider": "aws",
+      "adapter": "aws_bedrock_converse",
+      "model_id": "us.anthropic.claude-sonnet-5",
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "thinking": {
+              "type": "adaptive",
+              "display": "summarized"
+            },
+            "output_config": {
+              "effort": "high"
+            }
+          }
+        },
+        "generation": {
+          "max_output_tokens": 128000
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "cost_efficient",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-06-30",
+        "input_per_million": 2,
+        "cached_input_per_million": 0.2,
+        "cache_read_input_per_million": 0.2,
+        "cache_write_input_per_million": 2.5,
+        "output_per_million": 10
+      }
+    },
+    "claude_opus_5_5_aws": {
+      "display_name": "Claude Opus 5.5",
+      "provider": "aws",
+      "adapter": "aws_bedrock_converse",
+      "model_id": "us.anthropic.claude-opus-5-5",
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "thinking": {
+              "type": "adaptive",
+              "display": "summarized"
+            },
+            "output_config": {
+              "effort": "high"
+            }
+          }
+        },
+        "generation": {
+          "max_output_tokens": 128000
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "frontier",
+        "placeholder": false
+      }
+    },
+    "claude_sonnet_5_5_aws": {
+      "display_name": "Claude Sonnet 5.5",
+      "provider": "aws",
+      "adapter": "aws_bedrock_converse",
+      "model_id": "us.anthropic.claude-sonnet-5-5",
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "thinking": {
+              "type": "adaptive",
+              "display": "summarized"
+            },
+            "output_config": {
+              "effort": "high"
+            }
+          }
+        },
+        "generation": {
+          "max_output_tokens": 128000
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "cost_efficient",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-09-28",
+        "input_per_million": 2,
+        "cached_input_per_million": 0.2,
+        "cache_read_input_per_million": 0.2,
+        "cache_write_input_per_million": 2.5,
+        "output_per_million": 10
+      }
+    },
+    "grok_4_7_aws": {
+      "display_name": "Grok 4.7",
+      "provider": "aws",
+      "adapter": "aws_bedrock_converse",
+      "model_id": "us.xai.grok-4.7",
+      "read_timeout_seconds": 900,
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "reasoning_effort": "high"
+          }
+        },
+        "generation": {
+          "max_output_tokens": 128000
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "frontier",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-09-28",
+        "input_per_million": 2.2,
+        "cached_input_per_million": 0.55,
+        "cache_read_input_per_million": 0.55,
+        "output_per_million": 6.6
+      }
+    },
+    "gemma_4_31b_aws": {
+      "display_name": "Gemma 4 31B",
+      "provider": "aws",
+      "adapter": "aws_bedrock_mantle",
+      "model_id": "google.gemma-4-31b",
+      "api_key_env": "AWS_BEARER_TOKEN_BEDROCK",
+      "base_url": "https://bedrock-mantle.us-east-2.api.aws/openai/v1",
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "reasoning": {
+              "effort": "high",
+              "summary": "auto"
+            }
+          }
+        },
+        "generation": {
+          "max_output_tokens": 32768,
+          "parallel_tool_calls": false
+        }
+      },
+      "metadata": {
+        "access": "open_weight",
+        "tier": "cost_efficient",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-08-12",
+        "input_per_million": 0.14,
+        "cached_input_per_million": 0.14,
+        "cache_read_input_per_million": 0.14,
+        "cache_write_input_per_million": 0.14,
+        "output_per_million": 0.4
+      }
+    },
+    "gpt_5_6_sol_aws": {
+      "display_name": "GPT-5.6 Sol",
+      "provider": "aws",
+      "adapter": "aws_bedrock_mantle",
+      "model_id": "openai.gpt-5.6-sol",
+      "api_key_env": "AWS_BEARER_TOKEN_BEDROCK",
+      "base_url": "https://bedrock-mantle.us-east-2.api.aws/openai/v1",
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "reasoning": {
+              "effort": "high",
+              "summary": "auto"
+            },
+            "include": [
+              "reasoning.encrypted_content"
+            ]
+          }
+        },
+        "generation": {
+          "max_output_tokens": 128000
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "frontier",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-07-13",
+        "input_per_million": 5.5,
+        "cached_input_per_million": 0.55,
+        "cache_read_input_per_million": 0.55,
+        "cache_write_input_per_million": 6.875,
+        "output_per_million": 33
+      }
+    },
+    "gpt_5_6_luna_aws": {
+      "display_name": "GPT-5.6 Luna",
+      "provider": "aws",
+      "adapter": "aws_bedrock_mantle",
+      "model_id": "openai.gpt-5.6-luna",
+      "api_key_env": "AWS_BEARER_TOKEN_BEDROCK",
+      "base_url": "https://bedrock-mantle.us-east-2.api.aws/openai/v1",
+      "capabilities": {
+        "server_stop_sequences": false
+      },
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "reasoning": {
+              "effort": "high",
+              "summary": "auto"
+            },
+            "include": [
+              "reasoning.encrypted_content"
+            ]
+          }
+        },
+        "generation": {
+          "max_output_tokens": 128000
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "cost_efficient",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-07-30",
+        "input_per_million": 0.22,
+        "cached_input_per_million": 0.022,
+        "cache_read_input_per_million": 0.022,
+        "cache_write_input_per_million": 0.275,
+        "output_per_million": 1.32
+      }
+    },
+    "gpt_5_6_sol_openai": {
+      "display_name": "GPT-5.6 Sol",
+      "provider": "openai",
+      "adapter": "openai_responses",
+      "model_id": "gpt-5.6-sol",
+      "api_key_env": "OPENAI_API_KEY",
+      "capabilities": {
+        "server_stop_sequences": false
+      },
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "reasoning": {
+              "effort": "high",
+              "summary": "auto"
+            },
+            "include": [
+              "reasoning.encrypted_content"
+            ]
+          }
+        },
+        "generation": {
+          "max_output_tokens": 128000
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "frontier",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-08-16",
+        "input_per_million": 5,
+        "cached_input_per_million": 0.5,
+        "cache_read_input_per_million": 0.5,
+        "cache_write_input_per_million": 6.25,
+        "output_per_million": 30
+      }
+    },
+    "gpt_5_6_luna_openai": {
+      "display_name": "GPT-5.6 Luna",
+      "provider": "openai",
+      "adapter": "openai_responses",
+      "model_id": "gpt-5.6-luna",
+      "api_key_env": "OPENAI_API_KEY",
+      "capabilities": {
+        "server_stop_sequences": false
+      },
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "reasoning": {
+              "effort": "high",
+              "summary": "auto"
+            },
+            "include": [
+              "reasoning.encrypted_content"
+            ]
+          }
+        },
+        "generation": {
+          "max_output_tokens": 128000
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "cost_efficient",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-08-16",
+        "input_per_million": 0.2,
+        "cached_input_per_million": 0.02,
+        "cache_read_input_per_million": 0.02,
+        "cache_write_input_per_million": 0.25,
+        "output_per_million": 1.2
+      }
+    },
+    "gemini_3_1_pro_preview_google": {
+      "display_name": "Gemini 3.1 Pro Preview",
+      "provider": "google",
+      "adapter": "google_genai",
+      "model_id": "gemini-3.1-pro-preview",
+      "api_key_env": "GEMINI_API_KEY",
+      "capabilities": {
+        "server_stop_sequences": true
+      },
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "thinking_config": {
+              "thinking_level": "high"
+            }
+          }
+        },
+        "generation": {
+          "max_output_tokens": 65536
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "frontier",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-08-19",
+        "input_per_million": 2,
+        "cached_input_per_million": 0.2,
+        "cache_read_input_per_million": 0.2,
+        "cache_write_input_per_million": 2,
+        "output_per_million": 12
+      }
+    },
+    "gemini_3_7_flash_google": {
+      "display_name": "Gemini 3.7 Flash",
+      "provider": "google",
+      "adapter": "google_genai",
+      "model_id": "gemini-3.7-flash",
+      "api_key_env": "GEMINI_API_KEY",
+      "capabilities": {
+        "server_stop_sequences": true
+      },
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "thinking_config": {
+              "thinking_level": "high"
+            }
+          }
+        },
+        "generation": {
+          "max_output_tokens": 65536
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "cost_efficient",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-12-30",
+        "input_per_million": 0.75,
+        "cached_input_per_million": 0.075,
+        "cache_read_input_per_million": 0.075,
+        "cache_write_input_per_million": 0.75,
+        "output_per_million": 3.75
+      }
+    },
+    "gemini_3_8_flash_google": {
+      "display_name": "Gemini 3.8 Flash",
+      "provider": "google",
+      "adapter": "google_genai",
+      "model_id": "gemini-3.8-flash",
+      "api_key_env": "GEMINI_API_KEY",
+      "capabilities": {
+        "server_stop_sequences": true
+      },
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "thinking_config": {
+              "thinking_level": "high"
+            }
+          }
+        },
+        "generation": {
+          "max_output_tokens": 65536
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "cost_efficient",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-10-13",
+        "input_per_million": 0.75,
+        "cached_input_per_million": 0.075,
+        "cache_read_input_per_million": 0.075,
+        "cache_write_input_per_million": 0.75,
+        "output_per_million": 3.75
+      }
+    },
+    "gemini_4_argon_google": {
+      "display_name": "Gemini 4 Argon",
+      "provider": "google",
+      "adapter": "google_genai",
+      "model_id": "gemini-4-argon",
+      "api_key_env": "GEMINI_API_KEY",
+      "capabilities": {
+        "server_stop_sequences": true
+      },
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "thinking_config": {
+              "thinking_level": "high"
+            }
+          }
+        },
+        "generation": {
+          "max_output_tokens": 1048576,
+          "automatic_continuation": true,
+          "http_options": {
+            "timeout": 1200000
+          }
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "frontier",
+        "placeholder": false
+      },
+      "pricing": {
+        "$comment": "Introductory rates through 2026-11-30; input/output/cached input become 4/20/0.2 USD per million on 2026-12-01. Implicit caching only.",
+        "currency": "USD",
+        "effective_date": "2026-10-13",
+        "input_per_million": 4,
+        "cached_input_per_million": 0.1,
+        "cache_read_input_per_million": 0.1,
+        "cache_write_input_per_million": 2,
+        "output_per_million": 20
+      }
+    },
+    "glm_5_3_aws": {
+      "display_name": "GLM-5.3 (AWS)",
+      "provider": "aws",
+      "adapter": "aws_bedrock_chat_completions",
+      "model_id": "global.zai.glm-5.3",
+      "api_key_env": "AWS_BEARER_TOKEN_BEDROCK",
+      "base_url": "https://bedrock-runtime.us-east-2.amazonaws.com/openai/v1",
+      "read_timeout_seconds": 600,
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "reasoning_effort": "high"
+          }
+        },
+        "generation": {
+          "max_output_tokens": 131072
+        }
+      },
+      "metadata": {
+        "access": "open_weight",
+        "tier": "frontier",
+        "placeholder": false
+      }
+    },
+    "glm_5_2_together": {
+      "display_name": "GLM-5.2",
+      "provider": "together",
+      "adapter": "together_openai_compatible",
+      "model_id": "zai-org/GLM-5.2",
+      "api_key_env": "TOGETHER_API_KEY",
+      "base_url": "https://api.together.ai/v1",
+      "capabilities": {
+        "server_stop_sequences": true,
+        "server_stop_sequences_with_reasoning": false
+      },
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "reasoning_effort": "high"
+          }
+        },
+        "generation": {
+          "max_output_tokens": 131072
+        }
+      },
+      "metadata": {
+        "access": "open_weight",
+        "tier": "frontier",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-08-16",
+        "input_per_million": 1.4,
+        "cached_input_per_million": 0.26,
+        "cache_read_input_per_million": 0.26,
+        "cache_write_input_per_million": 1.4,
+        "output_per_million": 4.4
+      }
+    },
+    "kimi_k3_aws": {
+      "display_name": "Kimi K3 (AWS)",
+      "provider": "aws",
+      "adapter": "aws_bedrock_chat_completions",
+      "model_id": "global.moonshotai.kimi-k3",
+      "api_key_env": "AWS_BEARER_TOKEN_BEDROCK",
+      "base_url": "https://bedrock-runtime.us-east-2.amazonaws.com/openai/v1",
+      "read_timeout_seconds": 600,
+      "capabilities": {
+        "server_stop_sequences": true,
+        "server_stop_sequences_with_reasoning": false
+      },
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "reasoning_effort": "high"
+          }
+        },
+        "generation": {
+          "max_output_tokens": 131072,
+          "parallel_tool_calls": false
+        }
+      },
+      "metadata": {
+        "access": "open_weight",
+        "tier": "frontier",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-09-18",
+        "input_per_million": 3,
+        "cached_input_per_million": 0.3,
+        "cache_read_input_per_million": 0.3,
+        "cache_write_input_per_million": 3.75,
+        "output_per_million": 15
+      }
+    },
+    "kimi_k3_together": {
+      "display_name": "Kimi K3",
+      "provider": "together",
+      "adapter": "together_openai_compatible",
+      "model_id": "moonshotai/Kimi-K3",
+      "api_key_env": "TOGETHER_API_KEY",
+      "base_url": "https://api.together.ai/v1",
+      "capabilities": {
+        "server_stop_sequences": true,
+        "server_stop_sequences_with_reasoning": false
+      },
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "reasoning_effort": "high"
+          }
+        },
+        "generation": {
+          "max_output_tokens": 131072,
+          "parallel_tool_calls": false
+        }
+      },
+      "metadata": {
+        "access": "open_weight",
+        "tier": "frontier",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-08-19",
+        "input_per_million": 3,
+        "cached_input_per_million": 0.3,
+        "cache_read_input_per_million": 0.3,
+        "cache_write_input_per_million": 3,
+        "output_per_million": 15
+      }
+    },
+    "muse_glimmer_30b_together": {
+      "display_name": "Muse Glimmer 30B",
+      "provider": "together",
+      "adapter": "together_openai_compatible",
+      "model_id": "meta-models/Muse-Glimmer-30B",
+      "api_key_env": "TOGETHER_API_KEY",
+      "base_url": "https://api.together.ai/v1",
+      "capabilities": {
+        "server_stop_sequences": true,
+        "server_stop_sequences_with_reasoning": false
+      },
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "reasoning_effort": "high"
+          }
+        },
+        "generation": {
+          "max_output_tokens": 131072
+        }
+      },
+      "metadata": {
+        "access": "open_weight",
+        "tier": "cost_efficient",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-08-19",
+        "input_per_million": 0.35,
+        "cached_input_per_million": 0.04,
+        "cache_read_input_per_million": 0.04,
+        "cache_write_input_per_million": 0.35,
+        "output_per_million": 1.5
+      }
+    },
+    "qwen_3_8_2_4t_together": {
+      "display_name": "Qwen3.8-2.4T-A95B",
+      "provider": "together",
+      "adapter": "together_openai_compatible",
+      "model_id": "Qwen/Qwen3.8-2.4T-A95B",
+      "api_key_env": "TOGETHER_API_KEY",
+      "base_url": "https://api.together.ai/v1",
+      "capabilities": {
+        "server_stop_sequences": true,
+        "server_stop_sequences_with_reasoning": false
+      },
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "reasoning_effort": "xhigh"
+          }
+        },
+        "generation": {
+          "max_output_tokens": 131072
+        }
+      },
+      "metadata": {
+        "access": "open_weight",
+        "tier": "frontier",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-08-19",
+        "input_per_million": 2.5,
+        "cached_input_per_million": 0.5,
+        "cache_read_input_per_million": 0.5,
+        "cache_write_input_per_million": 2.5,
+        "output_per_million": 6.25
+      }
+    },
+    "inkling_small_together": {
+      "display_name": "Inkling Small",
+      "provider": "together",
+      "adapter": "together_openai_compatible",
+      "model_id": "thinkingmachines/Inkling-Small",
+      "api_key_env": "TOGETHER_API_KEY",
+      "base_url": "https://api.together.ai/v1",
+      "capabilities": {
+        "server_stop_sequences": true,
+        "server_stop_sequences_with_reasoning": false
+      },
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "reasoning_effort": "high"
+          }
+        },
+        "generation": {
+          "max_output_tokens": 262144
+        }
+      },
+      "metadata": {
+        "access": "open_weight",
+        "tier": "cost_efficient",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-08-19",
+        "input_per_million": 0.5,
+        "cached_input_per_million": 0.1,
+        "cache_read_input_per_million": 0.1,
+        "cache_write_input_per_million": 0.5,
+        "output_per_million": 1.2
+      }
+    },
+    "deepseek_v4_flash_together": {
+      "display_name": "DeepSeek V4 Flash 0731",
+      "provider": "together",
+      "adapter": "together_openai_compatible",
+      "model_id": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "api_key_env": "TOGETHER_API_KEY",
+      "base_url": "https://api.together.ai/v1",
+      "capabilities": {
+        "server_stop_sequences": true,
+        "server_stop_sequences_with_reasoning": false
+      },
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "reasoning_effort": "high"
+          }
+        },
+        "generation": {
+          "max_output_tokens": 393216
+        }
+      },
+      "metadata": {
+        "access": "open_weight",
+        "tier": "cost_efficient",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-08-16",
+        "input_per_million": 0.14,
+        "cached_input_per_million": 0.03,
+        "cache_read_input_per_million": 0.03,
+        "cache_write_input_per_million": 0.14,
+        "output_per_million": 0.28
+      }
+    },
+    "deepseek_v4_flash_openrouter_relace": {
+      "display_name": "DeepSeek V4 Flash 0731 (OpenRouter Relace)",
+      "provider": "openrouter",
+      "adapter": "openrouter_chat_completions",
+      "model_id": "deepseek/deepseek-v4-flash-0731",
+      "api_key_env": "OPENROUTER_API_KEY",
+      "base_url": "https://openrouter.ai/api/v1",
+      "capabilities": {
+        "server_stop_sequences": true,
+        "server_stop_sequences_with_reasoning": false
+      },
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "reasoning_effort": "high"
+          }
+        },
+        "generation": {
+          "max_output_tokens": 393216
+        }
+      },
+      "metadata": {
+        "access": "open_weight",
+        "tier": "cost_efficient",
+        "placeholder": false,
+        "quantization": "fp4"
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-09-19",
+        "input_per_million": 0.04,
+        "cached_input_per_million": 0.016,
+        "cache_read_input_per_million": 0.016,
+        "cache_write_input_per_million": 0.04,
+        "output_per_million": 0.08
+      },
+      "read_timeout_seconds": 900,
+      "provider_routing": {
+        "only": [
+          "relace/fp4"
+        ],
+        "allow_fallbacks": false,
+        "require_parameters": true
+      }
+    },
+    "deepseek_v4_pro_0813_together": {
+      "display_name": "DeepSeek V4 Pro 0813",
+      "provider": "together",
+      "adapter": "together_openai_compatible",
+      "model_id": "deepseek-ai/DeepSeek-V4-Pro-0813",
+      "api_key_env": "TOGETHER_API_KEY",
+      "base_url": "https://api.together.ai/v1",
+      "capabilities": {
+        "server_stop_sequences": true,
+        "server_stop_sequences_with_reasoning": false
+      },
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "reasoning_effort": "high"
+          }
+        },
+        "generation": {
+          "max_output_tokens": 393216
+        }
+      },
+      "metadata": {
+        "access": "open_weight",
+        "tier": "frontier",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-08-19",
+        "input_per_million": 1.32,
+        "cached_input_per_million": 0.13,
+        "cache_read_input_per_million": 0.13,
+        "cache_write_input_per_million": 1.32,
+        "output_per_million": 3.96
+      }
+    },
+    "claude_fable_5_aws": {
+      "display_name": "Claude Fable 5",
+      "provider": "aws",
+      "adapter": "aws_bedrock_converse",
+      "model_id": "us.anthropic.claude-fable-5",
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "thinking": {
+              "type": "adaptive"
+            },
+            "output_config": {
+              "effort": "high"
+            }
+          }
+        },
+        "generation": {
+          "max_output_tokens": 128000
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "frontier",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-09-29",
+        "input_per_million": 11,
+        "cached_input_per_million": 1.1,
+        "cache_read_input_per_million": 1.1,
+        "cache_write_input_per_million": 13.75,
+        "output_per_million": 55
+      },
+      "region": "us-east-2"
+    },
+    "gpt_6_1_sol_aws": {
+      "display_name": "GPT-6.1 Sol",
+      "provider": "aws",
+      "adapter": "aws_bedrock_mantle",
+      "model_id": "openai.gpt-6.1-sol",
+      "api_key_env": "AWS_BEARER_TOKEN_BEDROCK",
+      "base_url": "https://bedrock-mantle.us-east-1.api.aws/openai/v1",
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "reasoning": {
+              "effort": "high",
+              "summary": "auto"
+            },
+            "include": [
+              "reasoning.encrypted_content"
+            ]
+          }
+        },
+        "generation": {
+          "max_output_tokens": 131072
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "frontier",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-09-29",
+        "input_per_million": 2.2,
+        "cached_input_per_million": 0.11,
+        "cache_read_input_per_million": 0.11,
+        "cache_write_input_per_million": 2.75,
+        "output_per_million": 11
+      },
+      "region": "us-east-1"
+    },
+    "gpt_6_astra_aws": {
+      "display_name": "GPT-6 Astra",
+      "provider": "aws",
+      "adapter": "aws_bedrock_mantle",
+      "model_id": "openai.gpt-6-astra",
+      "api_key_env": "AWS_BEARER_TOKEN_BEDROCK",
+      "base_url": "https://bedrock-mantle.us-west-2.api.aws/openai/v1",
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "reasoning": {
+              "effort": "high",
+              "summary": "auto"
+            },
+            "include": [
+              "reasoning.encrypted_content"
+            ]
+          }
+        },
+        "generation": {
+          "max_output_tokens": 128000
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "frontier",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-09-29",
+        "input_per_million": 11,
+        "cached_input_per_million": 1.1,
+        "cache_read_input_per_million": 1.1,
+        "cache_write_input_per_million": 13.75,
+        "output_per_million": 55
+      },
+      "region": "us-west-2"
+    },
+    "claude_fable_5_1_aws": {
+      "display_name": "Claude Fable 5.1",
+      "provider": "aws",
+      "adapter": "aws_bedrock_converse",
+      "model_id": "us.anthropic.claude-fable-5-1",
+      "request": {
+        "reasoning": {
+          "enabled": true,
+          "parameters": {
+            "thinking": {
+              "type": "adaptive"
+            },
+            "output_config": {
+              "effort": "high"
+            }
+          }
+        },
+        "generation": {
+          "max_output_tokens": 128000
+        }
+      },
+      "metadata": {
+        "access": "proprietary",
+        "tier": "frontier",
+        "placeholder": false
+      },
+      "pricing": {
+        "currency": "USD",
+        "effective_date": "2026-09-29",
+        "input_per_million": 10,
+        "cached_input_per_million": 0.275,
+        "cache_read_input_per_million": 0.275,
+        "cache_write_input_per_million": 13.75,
+        "output_per_million": 50
+      },
+      "region": "us-east-2"
+    }
+  }
+}

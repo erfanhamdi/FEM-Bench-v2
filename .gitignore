@@ -1,0 +1,67 @@
+# Local credentials and machine-specific settings
+.env
+.env.*
+.aws/
+.codex/
+.agents/
+.vscode/
+.idea/
+.DS_Store
+
+# Python environments, caches, and builds
+.venv/
+venv/
+fem_bench_env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+build/
+dist/
+
+# Unpublished benchmark tasks and private experiment configuration
+/new_tasks/
+/benchmark_manifest.local.json
+/configs/experiments/local/
+*.local.yaml
+*.local.json
+
+# Experiment data, judge evidence, and generated analyses
+/experiment_runs/
+/judge_runs/
+/multiagent_runs/
+/analysis/
+/llm-as-judge/simpleagent/
+/llm-as-judge/openhands/
+/llm-as-judge/dossiers/
+/llm-as-judge/token_counts.csv
+/dashboard.html
+**/input_package.json
+**/judge_eval.json
+**/final_judgment.json
+**/result.json
+**/trajectory.json
+**/*_trajectory_*.json
+*.ipynb
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.parquet
+
+# Container images, archives, and scheduler logs
+*.sif
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.log
+*.o[0-9]*
+*.e[0-9]*

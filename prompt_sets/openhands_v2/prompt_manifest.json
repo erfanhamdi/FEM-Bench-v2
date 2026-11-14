@@ -1,0 +1,14 @@
+{
+  "files": [
+    {
+      "path": "prompt_sets/openhands_v2/instructions.md"
+    },
+    {
+      "path": "prompt_templates/code_prompt.j2"
+    }
+  ],
+  "harness": "openhands",
+  "prompt_set_id": "openhands_v2",
+  "schema_version": "1.0",
+  "track": "implementation"
+}

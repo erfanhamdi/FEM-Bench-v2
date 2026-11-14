@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fem_bench"
+version = "1.0.0"
+description = "Finite element method benchmark for LLMs"
+authors = [{name = "elejeune11"}]
+requires-python = ">=3.12"
+dependencies = [
+    "numpy",
+    "scipy",
+    "pytest",
+    "pyyaml",
+    "jinja2",
+    "python-dotenv",
+    "boto3",
+    "requests",
+    "openai",
+    "google-genai",
+    "together==2.31.0",
+]
+
+[project.optional-dependencies]
+analysis = ["matplotlib", "pandas"]
+dev = ["black"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

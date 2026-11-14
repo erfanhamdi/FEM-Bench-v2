@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "prompt_set_id": "multiagent_v2",
+  "harness": "multiagent",
+  "track": "implementation",
+  "files": [
+    {
+      "path": "prompt_sets/multiagent_v2/prompts.json"
+    },
+    {
+      "path": "prompt_templates/code_prompt.j2"
+    }
+  ]
+}
